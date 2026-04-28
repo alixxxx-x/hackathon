@@ -116,8 +116,8 @@ export default function AboutUs() {
                             </div>
                             <h2 className="text-3xl font-black mb-6 tracking-tight">Our Vision</h2>
                             <p className="text-lg text-slate-400 mb-8 leading-relaxed italic">
-                                "To become the definitive career launchpad for the African Mediterranean region, 
-                                ensuring every motivated student has a clear path to professional excellence 
+                                "To become the definitive career launchpad for the African Mediterranean region,
+                                ensuring every motivated student has a clear path to professional excellence
                                 through impactful real-world experience."
                             </p>
                             <div className="flex items-center gap-4">

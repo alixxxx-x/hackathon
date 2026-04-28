@@ -68,7 +68,7 @@ export default function Navbar() {
         <nav className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-slate-100 shadow-sm">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-0.5 hover:opacity-80 transition-opacity">
-                    <span className="text-2xl font-black tracking-tighter text-slate-900 uppercase">Template</span>
+                    <span className="text-2xl font-bold tracking-tighter text-slate-900">MedSafe</span>
                     <span className="text-primary text-3xl leading-none -mt-1">.</span>
                 </Link>
 
@@ -161,7 +161,7 @@ export default function Navbar() {
                                 </Button>
                             </Link>
                             <Link to="/register">
-                                <Button className="bg-primary hover:bg-primary/90 text-white text-[13px] font-bold rounded-full px-6 h-9 shadow-lg shadow-primary/20 active:scale-95 transition-all border-none">
+                                <Button className="bg-primary hover:bg-primary/90 text-white text-[13px] font-bold rounded-md px-6 h-9 shadow-none active:scale-95 transition-all border-none">
                                     Register
                                 </Button>
                             </Link>

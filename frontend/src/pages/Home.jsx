@@ -1,376 +1,330 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, Rocket, Users, Briefcase } from "lucide-react";
+import { ArrowRight, ShieldCheck, Activity, Languages, Stethoscope, FileText, Sparkles, ChevronRight, ScanLine, BookOpen, Users } from "lucide-react";
 import { motion } from "framer-motion";
+
+import imgStethoscope from "@/assets/etactics-inc-g3PsF4_y7ZY-unsplash.jpg";
+import imgNurse from "@/assets/jeshoots-com-l0j0DHVWcIE-unsplash.jpg";
+import imgPillsSpilling from "@/assets/towfiqu-barbhuiya-w8p9cQDLX7I-unsplash.jpg";
+import imgLabScientist from "@/assets/benjamin-lehman-gkZ-k3xf25w-unsplash.jpg";
+import imgPillOrganizer from "@/assets/towfiqu-barbhuiya-_04ev82q-s0-unsplash.jpg";
+import imgBlisterPacks from "@/assets/roberto-sorin-RS0-h_pyByk-unsplash.jpg";
+import imgGlovesHeart from "@/assets/anton-8q-U8X1zkvI-unsplash.jpg";
+
+const fade = {
+    hidden: { opacity: 0, y: 20 },
+    show: (d = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: d * 0.12, ease: "easeOut" } }),
+};
 
 function Home() {
     return (
-        <div className="flex flex-col w-full">
-            {/* Hero Section - Split Layout with Framer Motion */}
-            <section className="relative pt-24 pb-32 lg:pt-36 lg:pb-40 overflow-hidden bg-background">
-                {/* Subtle Background Pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        <div className="w-full bg-white dark:bg-zinc-950 font-sans">
 
-                <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-
-                        {/* Left Content Column */}
-                        <motion.div
-                            initial="hidden"
-                            animate="visible"
-                            variants={{
-                                hidden: { opacity: 0 },
-                                visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
-                            }}
-                            className="flex flex-col items-start text-left max-w-2xl"
+            {/* ────────────── INTRO ────────────── */}
+            <section className="relative">
+                {/* BG image */}
+                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${imgBlisterPacks})` }} />
+                {/* Content on top */}
+                <div className="relative z-10 pt-32 pb-20 lg:pt-44 lg:pb-28 bg-black/50">
+                    <div className="max-w-4xl mx-auto px-6 text-center">
+                        <motion.h1
+                            variants={fade} initial="hidden" animate="show" custom={0}
+                            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] mb-6"
                         >
-                            <motion.div
-                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6"
-                            >
-                                <Rocket className="w-4 h-4" />
-                                <span>v1.0 is officially live</span>
-                            </motion.div>
+                            Check your medications{" "}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                                before they clash.
+                            </span>
+                        </motion.h1>
 
-                            <motion.h1
-                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                                className="text-5xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-6 leading-[1.1]"
-                            >
-                                The modern way to <br />
-                                <span className="text-primary relative inline-block">
-                                    build web apps.
-                                    {/* Decorative swoosh under text */}
-                                    <motion.svg
-                                        initial={{ pathLength: 0, opacity: 0 }}
-                                        animate={{ pathLength: 1, opacity: 1 }}
-                                        transition={{ duration: 1, delay: 0.8, ease: "easeInOut" }}
-                                        className="absolute w-full h-3 -bottom-1 left-0 text-primary/40" viewBox="0 0 100 10" preserveAspectRatio="none"
-                                    >
-                                        <path d="M0 5 Q 50 10 100 0" stroke="currentColor" strokeWidth="4" fill="transparent" strokeLinecap="round" />
-                                    </motion.svg>
-                                </span>
-                            </motion.h1>
-
-                            <motion.p
-                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                                className="text-xl text-muted-foreground mb-10 leading-relaxed font-medium"
-                            >
-                                Stop reinventing the wheel. Use our battle-tested components,
-                                beautiful layouts, and robust architecture to launch in days, not months.
-                            </motion.p>
-
-                            <motion.div
-                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                                className="flex flex-wrap items-center gap-6"
-                            >
-                                <Link to="/templates">
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button size="lg" className="rounded-xl px-8 h-14 text-base font-bold shadow-xl shadow-primary/30">
-                                            Start Building Free
-                                        </Button>
-                                    </motion.div>
-                                </Link>
-                                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                                    <CheckCircle className="w-4 h-4 text-primary" /> No credit card required
-                                </div>
-                            </motion.div>
-                        </motion.div>
-
-                        {/* Right Visual Column (Floating Code/UI Mockup) */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            transition={{ duration: 0.8, delay: 0.3, type: "spring", bounce: 0.4 }}
-                            className="relative lg:ml-auto w-full max-w-lg lg:max-w-none mt-12 lg:mt-0"
+                        <motion.p
+                            variants={fade} initial="hidden" animate="show" custom={1}
+                            className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed"
                         >
-                            {/* Glow behind mockup - Continuously Rotating */}
-                            <motion.div
-                                animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-                                transition={{ rotate: { duration: 25, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-primary/30 via-blue-500/20 to-purple-500/30 rounded-full blur-3xl -z-10"
-                            />
+                            MedSafe checks drug interactions against 236,000+ clinical records and explains results in Algerian Darija — so every patient and pharmacist can understand.
+                        </motion.p>
 
-                            {/* Mockup Container - Floating Animation */}
-                            <motion.div
-                                animate={{ y: [0, -15, 0] }}
-                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                                className="relative rounded-2xl border border-border/50 bg-background/80 backdrop-blur-xl shadow-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10"
-                            >
-                                {/* Fake Window Header */}
-                                <div className="flex items-center px-4 py-3 border-b border-border/50 bg-muted/50">
-                                    <div className="flex gap-1.5 hover:*:opacity-80 cursor-pointer">
-                                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                    </div>
-                                    <div className="mx-auto text-xs font-medium text-muted-foreground flex items-center gap-2">
-                                        <Briefcase className="w-3 h-3" /> App.jsx
-                                    </div>
-                                </div>
-                                {/* Fake Code Content */}
-                                <div className="p-6 font-mono text-sm text-left overflow-x-auto whitespace-nowrap">
-                                    <div className="flex text-muted-foreground mb-4">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">1</span>
-                                        <span><span className="text-purple-500">import</span> <span className="text-foreground">{' { ThemeProvider } '}</span> <span className="text-purple-500">from</span> <span className="text-green-500">"@/components/theme"</span>;</span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-4">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">2</span>
-                                        <span><span className="text-purple-500">import</span> <span className="text-foreground">{' { Hero } '}</span> <span className="text-purple-500">from</span> <span className="text-green-500">"@/components/ui/hero"</span>;</span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">3</span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">4</span>
-                                        <span><span className="text-blue-500">export default function</span> <span className="text-yellow-500">App</span><span className="text-foreground">() {'{'}</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">5</span>
-                                        <span><span className="ml-4 text-purple-500">return</span> <span className="text-foreground">(</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">6</span>
-                                        <span><span className="ml-8 text-foreground">{'<'}</span><span className="text-red-400">ThemeProvider</span><span className="text-foreground">{'>'}</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">7</span>
-                                        <span><span className="ml-12 text-foreground">{'<'}</span><span className="text-red-400">Hero</span> <span className="text-yellow-500">variant</span>=<span className="text-green-500">"split"</span> <span className="text-foreground">{'/>'}</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground mb-2">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">8</span>
-                                        <span><span className="ml-8 text-foreground">{'</'}</span><span className="text-red-400">ThemeProvider</span><span className="text-foreground">{'>'}</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">9</span>
-                                        <span><span className="ml-4 text-foreground">)</span></span>
-                                    </div>
-                                    <div className="flex text-muted-foreground">
-                                        <span className="w-8 text-right mr-4 opacity-50 shrink-0">10</span>
-                                        <span><span className="text-foreground">{'}'}</span></span>
-                                    </div>
-
-                                    {/* Blinking cursor */}
-                                    <motion.div
-                                        animate={{ opacity: [1, 0, 1] }}
-                                        transition={{ duration: 1, repeat: Infinity }}
-                                        className="w-2 h-4 bg-primary mt-2 ml-8"
-                                    ></motion.div>
-                                </div>
-                            </motion.div>
+                        <motion.div
+                            variants={fade} initial="hidden" animate="show" custom={2}
+                            className="flex flex-col sm:flex-row justify-center gap-3"
+                        >
+                            <Link to="/check">
+                                <Button size="lg" className="h-12 px-7 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base shadow-lg transition-all hover:scale-[1.02] group">
+                                    Check Interactions
+                                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                </Button>
+                            </Link>
+                            <Link to="/pharmacist">
+                                <Button size="lg" className="h-12 px-7 rounded-xl bg-white text-slate-900 font-semibold text-base hover:bg-white/90 shadow-sm border border-slate-100">
+                                    <Stethoscope className="mr-2 w-4 h-4 text-slate-500" />
+                                    Pharmacist Portal
+                                </Button>
+                            </Link>
                         </motion.div>
-
                     </div>
                 </div>
             </section>
 
-            {/* Premium Bento Grid Features Section */}
-            <section className="py-24 lg:py-32 bg-background relative overflow-hidden border-t border-border/40">
-                {/* Decorative background elements */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none translate-x-1/3 -translate-y-1/2"></div>
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none -translate-x-1/3 translate-y-1/2"></div>
 
-                <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <div className="mb-20">
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-                            Everything you need. <br className="hidden sm:block" />
-                            <span className="text-muted-foreground">Nothing you don't.</span>
-                        </h2>
-                        <p className="text-lg text-muted-foreground max-w-2xl font-medium">
-                            We've obsessed over every detail so you don't have to. Experience a platform built for speed, scale, and developer happiness.
+            {/* ────────────── HOW IT WORKS ────────────── */}
+            <section className="py-20 lg:py-28 border-t border-slate-100 dark:border-zinc-800">
+                <div className="max-w-6xl mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-80px" }}
+                        className="text-center mb-16"
+                    >
+                        <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">How it works</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Three steps to safer prescriptions.</h2>
+                        <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                            Whether you're a patient checking your own pills or a pharmacist validating an ordonnance, MedSafe makes it simple.
                         </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            {
+                                step: "01",
+                                icon: <FileText className="w-5 h-5" />,
+                                title: "Enter your medications",
+                                desc: "Type the names of your drugs manually, or use our built-in OCR scanner to photograph your prescription. MedSafe extracts the medication names automatically — no medical knowledge required.",
+                                color: "#3b82f6",
+                            },
+                            {
+                                step: "02",
+                                icon: <Activity className="w-5 h-5" />,
+                                title: "We check for interactions",
+                                desc: "Your medication list is instantly cross-referenced against the DDInter database containing 236,834 verified drug-drug interactions. Each pair is classified as dangerous, caution, or safe.",
+                                color: "#6366f1",
+                            },
+                            {
+                                step: "03",
+                                icon: <Languages className="w-5 h-5" />,
+                                title: "Get results in Darija",
+                                desc: "Gemini AI translates every medical warning into plain Algerian Darija. No more confusing French or English medical jargon — just clear advice anyone can act on.",
+                                color: "#06b6d4",
+                            },
+                        ].map((item, i) => (
+                            <motion.div
+                                key={item.step}
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-60px" }}
+                                transition={{ delay: i * 0.1 }}
+                                style={{ borderTop: `3px solid ${item.color}` }}
+                                className="bg-white dark:bg-zinc-900 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <div
+                                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold mb-5"
+                                    style={{ backgroundColor: item.color }}
+                                >
+                                    {item.step}
+                                </div>
+                                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl mb-4" style={{ backgroundColor: `${item.color}15`, color: item.color }}>
+                                    {item.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                                <p className="text-slate-500 leading-relaxed">{item.desc}</p>
+                            </motion.div>
+                        ))}
                     </div>
+                </div>
+            </section>
 
-                    {/* Bento Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
-                        {/* Feature 1: Large Card (Span 2) */}
-                        <div className="md:col-span-2 group relative overflow-hidden rounded-[2rem] border border-border/50 bg-muted/20 hover:bg-muted/40 transition-colors p-8 lg:p-12">
-                            <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 transform group-hover:scale-110">
-                                <Rocket className="w-64 h-64 text-foreground" />
+            {/* ────────────── FEATURE 1 — Clinical Database ────────────── */}
+            <section className="py-20 lg:py-28 bg-slate-50 dark:bg-zinc-900/50 border-t border-slate-100 dark:border-zinc-800">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5 }}
+                            className="order-2 lg:order-1"
+                        >
+                            <img
+                                src={imgLabScientist}
+                                alt="Scientist analyzing a sample, representing clinical-grade drug verification"
+                                className="w-full h-[420px] object-cover rounded-3xl shadow-lg"
+                            />
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="order-1 lg:order-2"
+                        >
+                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/10 text-blue-600 mb-5">
+                                <ShieldCheck className="w-5 h-5" />
                             </div>
-                            <div className="relative z-10 h-full flex flex-col justify-between">
-                                <div className="w-14 h-14 rounded-2xl bg-background shadow-sm border border-border flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500">
-                                    <Rocket className="text-primary w-7 h-7" />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-foreground tracking-tight">Lightning Fast Matching</h3>
-                                    <p className="text-muted-foreground text-lg max-w-md leading-relaxed">
-                                        Our proprietary algorithm connects your skills with the perfect role in milliseconds. Say goodbye to endless scrolling and application black holes.
-                                    </p>
-                                </div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
+                                Backed by real clinical data.
+                            </h2>
+                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
+                                MedSafe doesn't guess and it doesn't hallucinate. Every interaction result comes from <strong className="text-slate-700 dark:text-slate-300">DDInter</strong>, a peer-reviewed pharmacological database maintained by researchers — not scraped from the internet.
+                            </p>
+                            <p className="text-base text-slate-500 leading-relaxed mb-6">
+                                The database covers <strong className="text-slate-700 dark:text-slate-300">236,834 known drug-drug interactions</strong> across <strong className="text-slate-700 dark:text-slate-300">1,833 approved drugs</strong>. Each interaction is categorized by severity level so you know exactly how serious the risk is — from minor caution to life-threatening danger.
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                <Badge className="bg-red-50 text-red-600 border-red-200 px-3 py-1">Dangerous</Badge>
+                                <Badge className="bg-amber-50 text-amber-600 border-amber-200 px-3 py-1">Caution</Badge>
+                                <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 px-3 py-1">Safe</Badge>
                             </div>
-                        </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
 
-                        {/* Feature 2: Standard Card */}
-                        <div className="group relative overflow-hidden rounded-[2rem] border border-border/50 bg-muted/20 hover:bg-muted/40 transition-colors p-8 lg:p-10">
-                            <div className="relative z-10 h-full flex flex-col">
-                                <div className="w-12 h-12 rounded-xl bg-background shadow-sm border border-border flex items-center justify-center mb-8 group-hover:-translate-y-1 transition-transform duration-500">
-                                    <Users className="text-blue-500 w-6 h-6" />
-                                </div>
-                                <div className="mt-auto">
-                                    <h3 className="text-xl font-bold mb-3 text-foreground tracking-tight">Student Network</h3>
-                                    <p className="text-muted-foreground leading-relaxed">
-                                        Connect with ambitious peers, get CV feedback, and learn from former interns.
-                                    </p>
-                                </div>
+
+            {/* ────────────── FEATURE 2 — Darija Translation ────────────── */}
+            <section className="py-20 lg:py-28 border-t border-slate-100 dark:border-zinc-800">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 mb-5">
+                                <Languages className="w-5 h-5" />
                             </div>
-                        </div>
-
-                        {/* Feature 3: Standard Card */}
-                        <div className="group relative overflow-hidden rounded-[2rem] border border-border/50 bg-muted/20 hover:bg-muted/40 transition-colors p-8 lg:p-10">
-                            <div className="relative z-10 h-full flex flex-col">
-                                <div className="w-12 h-12 rounded-xl bg-background shadow-sm border border-border flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500">
-                                    <Briefcase className="text-green-500 w-6 h-6" />
-                                </div>
-                                <div className="mt-auto">
-                                    <h3 className="text-xl font-bold mb-3 text-foreground tracking-tight">Company Space</h3>
-                                    <p className="text-muted-foreground leading-relaxed">
-                                        Review profiles, schedule interviews, and manage contracts in one unified dashboard.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Feature 4: Wide Bottom Card (Span 2) */}
-                        <div className="md:col-span-2 group relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 to-transparent hover:from-primary/10 transition-colors p-8 lg:p-10 flex flex-col sm:flex-row items-center gap-10">
-                            <div className="flex-1">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-border/50 text-xs font-semibold mb-6 shadow-sm">
-                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    Real-time Analytics
-                                </div>
-                                <h3 className="text-2xl font-bold mb-3 text-foreground tracking-tight">Data-driven decisions</h3>
-                                <p className="text-muted-foreground leading-relaxed">
-                                    Track application success rates, profile views, and engagement metrics with our beautiful, intuitive analytics engine.
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
+                                Medical advice you can actually read.
+                            </h2>
+                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
+                                Drug warnings printed in French or English are useless if your patient speaks Darija. MedSafe uses <strong className="text-slate-700 dark:text-slate-300">Google Gemini AI</strong> to translate complex pharmacological language into plain Algerian Darija.
+                            </p>
+                            <p className="text-base text-slate-500 leading-relaxed mb-6">
+                                This means a grandmother picking up her heart medication can finally understand what her doctor meant when he said "contraindicated with NSAIDs." We turn clinical jargon into sentences real people use every day.
+                            </p>
+                            <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-5 border border-slate-200 dark:border-zinc-700">
+                                <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                    <Sparkles className="w-3.5 h-3.5" /> Example — Darija output
+                                </p>
+                                <p className="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">
+                                    "Hadou zouj dwa ma yemchiwch m3a ba3d — yqadrou ydirou nezif fel me3da. Lazem techraver m3a tbib te3ek 9bel ma techrobhom m3a ba3d."
                                 </p>
                             </div>
-                            {/* Abstract Animated Data Visual */}
-                            <div className="w-full sm:w-56 h-36 rounded-2xl bg-background border border-border/50 shadow-sm p-5 flex items-end gap-3 shrink-0">
-                                <div className="w-full bg-primary/20 rounded-t h-[40%] group-hover:h-[60%] transition-all duration-700 ease-out delay-0"></div>
-                                <div className="w-full bg-primary/40 rounded-t h-[70%] group-hover:h-[85%] transition-all duration-700 ease-out delay-75"></div>
-                                <div className="w-full bg-primary rounded-t h-[50%] group-hover:h-[100%] transition-all duration-700 ease-out delay-150 shadow-[0_0_15px_rgba(var(--primary),0.3)]"></div>
-                                <div className="w-full bg-primary/60 rounded-t h-[90%] group-hover:h-[40%] transition-all duration-700 ease-out delay-200"></div>
-                            </div>
-                        </div>
+                        </motion.div>
 
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            <img
+                                src={imgNurse}
+                                alt="Healthcare professional explaining medication guidance to patients"
+                                className="w-full h-[420px] object-cover object-top rounded-3xl shadow-lg"
+                            />
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
-            {/* Built For Everyone Section */}
-            <section className="py-24 bg-white dark:bg-zinc-950 border-t border-slate-100 dark:border-zinc-800">
-                <div className="max-w-5xl mx-auto px-6">
-                    
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-                            Built For Everyone
-                        </h2>
-                        <p className="text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-                            Whether you are a candidate looking for opportunities or a company seeking talent, <br className="hidden md:block"/>
-                            Template has you covered.
-                        </p>
-                    </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* Candidates Card */}
-                        <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-8 flex flex-col">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">For Candidates</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">Launch your career with the perfect opportunity</p>
-                            
-                            <ul className="space-y-4 mb-10 flex-1">
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Build a professional profile and CV</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Get matched with relevant opportunities</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Track all your applications in one place</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Receive notifications for new matches</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Download your agreements</span>
-                                </li>
-                            </ul>
+            {/* ────────────── FEATURE 3 — OCR + Pharmacist ────────────── */}
+            <section className="py-20 lg:py-28 bg-slate-50 dark:bg-zinc-900/50 border-t border-slate-100 dark:border-zinc-800">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5 }}
+                            className="order-2 lg:order-1"
+                        >
+                            <img
+                                src={imgPillOrganizer}
+                                alt="Patient organizing daily medications in a pill organizer"
+                                className="w-full h-[420px] object-cover rounded-3xl shadow-lg"
+                            />
+                        </motion.div>
 
-                            <Link to="/register" className="w-full mt-auto">
-                                <Button className="w-full h-12 rounded-lg text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground">
-                                    Join as Candidate
-                                </Button>
-                            </Link>
-                        </div>
-
-                        {/* Companies Card */}
-                        <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-8 flex flex-col">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">For Companies</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">Find talented candidates who match your requirements</p>
-                            
-                            <ul className="space-y-4 mb-10 flex-1">
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Post unlimited job offers</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Access a pool of qualified candidates</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">AI-powered candidate recommendations</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Streamlined interview scheduling</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle className="w-5 h-5 text-white fill-emerald-500 shrink-0" />
-                                    <span className="text-sm text-slate-700 dark:text-slate-300">Digital agreement management</span>
-                                </li>
-                            </ul>
-
-                            <Link to="/register" className="w-full mt-auto">
-                                <Button className="w-full h-12 rounded-lg text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground">
-                                    Partner With Us
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Join Us Section in a Colored Container */}
-            <section className="py-24 bg-white dark:bg-zinc-950">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="bg-primary rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/20">
-                        {/* Background subtle pattern */}
-                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
-                        
-                        <div className="relative z-10 flex flex-col items-center">
-                            <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 border border-white/20 shadow-sm">
-                                <Rocket className="w-8 h-8 text-white" />
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="order-1 lg:order-2"
+                        >
+                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-500/10 text-violet-600 mb-5">
+                                <ScanLine className="w-5 h-5" />
                             </div>
-                            <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tighter mb-8 leading-tight">
-                                Join us and <br className="md:hidden" /> start building.
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
+                                Scan prescriptions. Skip the typing.
                             </h2>
-                            <p className="text-xl text-blue-100 max-w-2xl font-medium leading-relaxed mb-12">
-                                The next generation of professional matching is here. <br className="hidden sm:block" />
-                                Experience the future of talent acquisition and career growth.
+                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
+                                Take a photo of any ordonnance and MedSafe's OCR engine will extract medication names automatically. No need to spell complicated drug names or search through lists.
                             </p>
-                            <Link to="/register">
-                                <Button size="lg" className="bg-white hover:bg-blue-50 text-primary rounded-2xl px-12 h-16 text-lg font-semibold tracking-tight border-b-4 border-slate-200 shadow-xl transition-all hover:translate-y-[-2px] hover:shadow-2xl active:translate-y-[0px]">
-                                    Create Your Account
-                                    <ArrowRight className="ml-2 w-6 h-6" />
-                                </Button>
-                            </Link>
-                        </div>
+                            <p className="text-base text-slate-500 leading-relaxed mb-6">
+                                Built with pharmacists in mind — the dedicated Pharmacist Portal lets you manage multiple patients, run batch interaction checks, and generate professional PDF reports. Whether you're behind the counter or doing a home visit, MedSafe fits your workflow.
+                            </p>
+                            <div className="flex items-center gap-6 text-sm text-slate-500">
+                                <span className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-violet-500" /> PDF reports</span>
+                                <span className="flex items-center gap-2"><Users className="w-4 h-4 text-violet-500" /> Multi-patient</span>
+                                <span className="flex items-center gap-2"><ScanLine className="w-4 h-4 text-violet-500" /> OCR scanner</span>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+
+            {/* ────────────── STATS ────────────── */}
+            <section className="py-16 bg-slate-900 dark:bg-zinc-900 border-t border-slate-800">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        {[
+                            { value: "236,834", label: "Verified interactions" },
+                            { value: "1,833", label: "Approved drugs" },
+                            { value: "Darija", label: "Native language support" },
+                            { value: "Free", label: "For every patient" },
+                        ].map((s) => (
+                            <div key={s.label}>
+                                <p className="text-3xl md:text-4xl font-extrabold text-white mb-1">{s.value}</p>
+                                <p className="text-sm text-slate-400 font-medium">{s.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+
+            {/* ────────────── CTA ────────────── */}
+            <section className="relative h-[700px] flex items-center overflow-hidden">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center" 
+                    style={{ 
+                        backgroundImage: `url(${imgGlovesHeart})`,
+                        backgroundPosition: 'center' 
+                    }} 
+                />
+                <div className="absolute inset-0 bg-black/50" />
+                
+                <div className="relative z-10 w-full">
+                    <div className="max-w-3xl mx-auto px-6 text-center">
+                        <ShieldCheck className="w-10 h-10 text-white mx-auto mb-6" />
+                        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-5">
+                            Stop guessing. Start verifying.
+                        </h2>
+                        <p className="text-lg text-white/70 mb-10 max-w-xl mx-auto leading-relaxed">
+                            MedSafe is free for patients and built for Algerian pharmacists. Check your first interaction in under 30 seconds.
+                        </p>
+                        <Link to="/check">
+                            <Button size="lg" className="h-13 px-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base shadow-lg transition-all hover:scale-[1.02]">
+                                Try MedSafe Now
+                                <ChevronRight className="ml-1 w-4 h-4" />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </section>
