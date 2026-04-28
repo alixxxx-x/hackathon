@@ -14,8 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
         
         # Compact role-specific field mapping
         role_fields = {
-            User.Role.STUDENT: ['university_id', 'wilaya', 'phone'],
-            User.Role.COMPANY: ['name', 'logo', 'description', 'location', 'website'],
+            User.Role.PATIENT: ['age', 'wilaya', 'phone'],
+            User.Role.PHARMACIST: ['pharmacy_name', 'license_number', 'location', 'phone'],
             User.Role.ADMIN: ['department'],
         }
         
