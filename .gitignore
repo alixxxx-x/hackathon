@@ -64,3 +64,9 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+medsafe_api/medsafe_api.rar
+medsafe_api/ml/artifacts/label_encoder.joblib
+medsafe_api/ml/artifacts/drug_encoder.joblib
+medsafe_api/ml/artifacts/catboost_interaction.cbm
+medsafe_api/app/models/BioMistral-Instruct-MIMIC-7B-DARE.Q4_K_M.gguf
+medsafe_api/app/data/medsafe.db
