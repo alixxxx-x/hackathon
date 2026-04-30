@@ -12,8 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Profile() {
+    const { t } = useLanguage();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -27,12 +29,17 @@ export default function Profile() {
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef(null);
 
-    // Editable medical info (stored in localStorage for now)
+    // Editable medical/contact info (stored in localStorage for now)
     const [medicalInfo, setMedicalInfo] = useState(() => {
-        const saved = localStorage.getItem('medsafe_medical_info');
+        const saved = localStorage.getItem('Medora_medical_info');
         return saved ? JSON.parse(saved) : { blood_type: '', allergies: '', conditions: '', emergency_contact: '' };
     });
+    const [contactInfo, setContactInfo] = useState(() => {
+        const saved = localStorage.getItem('Medora_contact_info');
+        return saved ? JSON.parse(saved) : { phone: '', wilaya: '', address: '' };
+    });
     const [editingMedInfo, setEditingMedInfo] = useState(false);
+    const [editingContact, setEditingContact] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -122,15 +129,20 @@ export default function Profile() {
     };
 
     const saveMedicalInfo = () => {
-        localStorage.setItem('medsafe_medical_info', JSON.stringify(medicalInfo));
+        localStorage.setItem('Medora_medical_info', JSON.stringify(medicalInfo));
         setEditingMedInfo(false);
+    };
+
+    const saveContactInfo = () => {
+        localStorage.setItem('Medora_contact_info', JSON.stringify(contactInfo));
+        setEditingContact(false);
     };
 
     if (loading) return (
         <div className="flex h-[60vh] items-center justify-center bg-slate-50">
             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                <p className="text-sm font-medium text-slate-500">Loading your profile...</p>
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                <p className="text-sm font-medium text-slate-500 font-light">{t('loading_profile')}</p>
             </div>
         </div>
     );
@@ -146,23 +158,30 @@ export default function Profile() {
         <div className="bg-slate-50 min-h-screen py-16 px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
                 {/* Profile Header */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-8 mb-8 shadow-sm">
-                    <div className="flex flex-col md:flex-row items-center gap-8">
-                        <Avatar className="w-28 h-28 border-4 border-white shadow-lg ring-1 ring-slate-100 flex items-center justify-center overflow-hidden">
+                <div className="bg-[#061225] rounded-[24px] p-10 mb-8 shadow-xl shadow-blue-950/20 relative overflow-hidden group">
+                    {/* Subtle decorative element */}
+                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
+                    
+                    <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+                        <Avatar className="w-32 h-32 border-4 border-white/10 shadow-2xl ring-4 ring-white/5 flex items-center justify-center overflow-hidden">
                             {profile.profile_picture && <img src={profile.profile_picture} alt={profile.username} className="w-full h-full object-cover" />}
-                            <AvatarFallback className="bg-primary text-white font-medium text-3xl">{profile.username?.charAt(0).toUpperCase() || 'A'}</AvatarFallback>
+                            <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-4xl">{profile.username?.charAt(0).toUpperCase() || 'A'}</AvatarFallback>
                         </Avatar>
-                        <div className="text-center md:text-left flex-grow">
-                            <h1 className="text-2xl font-bold text-slate-900 mb-1">{profile.first_name || profile.username} {profile.last_name || ''}</h1>
-                            <p className="text-sm text-slate-500 mb-3">@{profile.username}</p>
-                            <div className="flex flex-wrap justify-center md:justify-start gap-2 items-center">
-                                <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md font-medium text-xs px-3 py-1">{profile.role?.replace('_', ' ')}</Badge>
-                                {profile.wilaya && <Badge variant="outline" className="rounded-md text-xs font-medium gap-1"><MapPin className="w-3 h-3" />{profile.wilaya}</Badge>}
-                                {profile.age && <Badge variant="outline" className="rounded-md text-xs font-medium">{profile.age} yrs</Badge>}
+                        <div className="text-center md:text-left flex-grow space-y-2">
+                            <h1 className="text-3xl font-bold text-white tracking-tighter leading-tight">{profile.first_name || profile.username} {profile.last_name || ''}</h1>
+                            <p className="text-blue-400 mb-4 font-light text-lg">@{profile.username}</p>
+                            <div className="flex flex-wrap justify-center md:justify-start gap-3 items-center">
+                                <Badge className="bg-blue-600 text-white border-none rounded-full font-bold text-[10px] px-4 py-1.5 uppercase tracking-widest">{profile.role?.replace('_', ' ')}</Badge>
+                                {profile.wilaya && <Badge variant="outline" className="rounded-full text-[10px] font-bold border-white/10 text-blue-100/60 gap-1 uppercase tracking-wider"><MapPin className="w-3.5 h-3.5" />{profile.wilaya}</Badge>}
+                                {profile.age && <Badge variant="outline" className="rounded-full text-[10px] font-bold border-white/10 text-blue-100/60 uppercase tracking-wider">{profile.age} {t('yrs')}</Badge>}
                             </div>
                         </div>
-                        <Button variant="outline" onClick={() => navigate('/settings')} className="rounded-lg h-11 px-6 font-medium border-slate-200 gap-2 shadow-none">
-                            <Settings className="w-4 h-4" /> Settings
+                        <Button 
+                            variant="outline" 
+                            onClick={() => navigate('/settings')} 
+                            className="rounded-2xl h-12 px-8 font-bold border-white/10 text-white bg-white/5 hover:bg-white/10 transition-all active:scale-95"
+                        >
+                            <Settings className="w-4 h-4" /> {t('settings')}
                         </Button>
                     </div>
                 </div>
@@ -189,77 +208,148 @@ export default function Profile() {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Contact */}
-                        <Card className="border-slate-200 shadow-sm rounded-xl overflow-hidden">
-                            <CardHeader className="bg-slate-50/50 pb-1"><CardTitle className="text-xs font-medium text-slate-400">Contact</CardTitle></CardHeader>
-                            <CardContent className="pt-2 space-y-3">
-                                <div className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-primary shrink-0" /><span className="text-sm font-medium text-slate-900 break-all">{profile.email}</span></div>
-                                <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-primary shrink-0" /><span className="text-sm font-medium text-slate-900">{profile.phone || <span className="text-slate-400 italic">Not set</span>}</span></div>
-                                {profile.wilaya && <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary shrink-0" /><span className="text-sm font-medium text-slate-900">{profile.wilaya}</span></div>}
-                            </CardContent>
-                        </Card>
+                        <div className="bg-white border border-slate-200/60 shadow-sm rounded-[24px] overflow-hidden">
+                            <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100/30 flex items-center justify-between">
+                                <h3 className="text-[13px] font-medium text-slate-400/80">{t('contact')}</h3>
+                                <button onClick={() => editingContact ? saveContactInfo() : setEditingContact(true)} className="text-[11px] font-bold text-blue-600 hover:underline">
+                                    {editingContact ? t('save') : t('edit')}
+                                </button>
+                            </div>
+                            <div className="px-6 py-6 space-y-5">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-slate-400/80">
+                                        <Mail className="w-3.5 h-3.5" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('email_label')}</span>
+                                    </div>
+                                    <p className="text-sm font-semibold text-sky-950 pl-0.5 tracking-tight">{profile.email}</p>
+                                </div>
+
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-slate-400/80">
+                                        <Phone className="w-3.5 h-3.5" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('phone_label')}</span>
+                                    </div>
+                                    {editingContact ? (
+                                        <input
+                                            value={contactInfo.phone}
+                                            onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                                            placeholder="+213..."
+                                            className="w-full h-10 px-3 rounded-xl border border-slate-100 text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all bg-slate-50/30"
+                                        />
+                                    ) : (
+                                        <p className="text-sm font-semibold text-sky-950 pl-0.5 tracking-tight">
+                                            {contactInfo.phone || profile.phone || <span className="text-slate-300 italic font-medium">{t('not_set')}</span>}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-slate-400/80">
+                                        <MapPin className="w-3.5 h-3.5" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('wilaya_label')}</span>
+                                    </div>
+                                    {editingContact ? (
+                                        <input
+                                            value={contactInfo.wilaya}
+                                            onChange={(e) => setContactInfo({ ...contactInfo, wilaya: e.target.value })}
+                                            placeholder="e.g. Algiers"
+                                            className="w-full h-10 px-3 rounded-xl border border-slate-100 text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all bg-slate-50/30"
+                                        />
+                                    ) : (
+                                        <p className="text-sm font-semibold text-sky-950 pl-0.5 tracking-tight">
+                                            {contactInfo.wilaya || profile.wilaya || <span className="text-slate-300 italic font-medium">{t('not_set')}</span>}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-slate-400/80">
+                                        <Settings className="w-3.5 h-3.5" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('address_label')}</span>
+                                    </div>
+                                    {editingContact ? (
+                                        <input
+                                            value={contactInfo.address}
+                                            onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+                                            placeholder="Street name, City"
+                                            className="w-full h-10 px-3 rounded-xl border border-slate-100 text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all bg-slate-50/30"
+                                        />
+                                    ) : (
+                                        <p className="text-sm font-semibold text-sky-950 pl-0.5 tracking-tight">
+                                            {contactInfo.address || <span className="text-slate-300 italic font-medium">{t('not_set')}</span>}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Medical Info */}
-                        <Card className="border-slate-200 shadow-sm rounded-xl overflow-hidden">
-                            <CardHeader className="bg-slate-50/50 pb-1 flex flex-row items-center justify-between">
-                                <CardTitle className="text-xs font-medium text-slate-400">Medical Info</CardTitle>
-                                <button onClick={() => editingMedInfo ? saveMedicalInfo() : setEditingMedInfo(true)} className="text-[10px] font-semibold text-primary hover:underline">
-                                    {editingMedInfo ? 'Save' : 'Edit'}
+                        <div className="bg-white border border-slate-200/60 shadow-sm rounded-[24px] overflow-hidden">
+                            <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100/30 flex items-center justify-between">
+                                <h3 className="text-[13px] font-medium text-slate-400/80">{t('medical_info')}</h3>
+                                <button onClick={() => editingMedInfo ? saveMedicalInfo() : setEditingMedInfo(true)} className="text-[11px] font-bold text-blue-600 hover:underline">
+                                    {editingMedInfo ? t('save') : t('edit')}
                                 </button>
-                            </CardHeader>
-                            <CardContent className="pt-2 space-y-3">
+                            </div>
+                            <div className="px-6 py-6 space-y-6">
                                 {[
-                                    { key: 'blood_type', label: 'Blood Type', icon: Heart, placeholder: 'e.g. O+' },
-                                    { key: 'allergies', label: 'Allergies', icon: AlertTriangle, placeholder: 'e.g. Penicillin' },
-                                    { key: 'conditions', label: 'Conditions', icon: Activity, placeholder: 'e.g. Hypertension' },
-                                    { key: 'emergency_contact', label: 'Emergency Contact', icon: Phone, placeholder: 'e.g. +213...' },
+                                    { key: 'blood_type', label: t('blood_type_label'), icon: Heart, placeholder: 'e.g. O+' },
+                                    { key: 'allergies', label: t('allergies_label'), icon: AlertTriangle, placeholder: 'e.g. Penicillin' },
+                                    { key: 'conditions', label: t('conditions_label'), icon: Activity, placeholder: 'e.g. Hypertension' },
+                                    { key: 'emergency_contact', label: t('emergency_label'), icon: Phone, placeholder: 'e.g. +213...' },
                                 ].map(({ key, label, icon: Icon, placeholder }) => (
-                                    <div key={key}>
-                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1"><Icon className="w-3 h-3" />{label}</span>
+                                    <div key={key} className="space-y-1">
+                                        <div className="flex items-center gap-2 text-slate-400/80">
+                                            <Icon className="w-3.5 h-3.5" />
+                                            <span className="text-[10px] font-bold uppercase tracking-widest">{label}</span>
+                                        </div>
                                         {editingMedInfo ? (
                                             <input
                                                 value={medicalInfo[key]}
                                                 onChange={(e) => setMedicalInfo({ ...medicalInfo, [key]: e.target.value })}
                                                 placeholder={placeholder}
-                                                className="w-full h-8 px-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                                className="w-full h-10 px-3 rounded-xl border border-slate-100 text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all bg-slate-50/30"
                                             />
                                         ) : (
-                                            <p className="text-sm font-medium text-slate-900 pl-1">{medicalInfo[key] || <span className="text-slate-300 italic">Not set</span>}</p>
+                                            <p className="text-sm font-semibold text-sky-950 pl-0.5 tracking-tight">
+                                                {medicalInfo[key] || <span className="text-slate-300 italic font-medium">{t('not_set')}</span>}
+                                            </p>
                                         )}
                                     </div>
                                 ))}
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
-                        {/* MedSafe card */}
-                        <div className="bg-primary rounded-2xl p-6 text-primary-foreground shadow-primary/20 shadow-xl relative overflow-hidden group">
-                            <div className="absolute -right-6 -bottom-6 opacity-[0.15] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500"><Shield className="w-32 h-32 text-white" /></div>
+                        {/* Medora card */}
+                        <div className="bg-[#061225] rounded-[24px] p-7 text-white shadow-xl shadow-blue-900/10 relative overflow-hidden group">
+                            <div className="absolute -right-6 -bottom-6 opacity-[0.1] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500"><Shield className="w-32 h-32 text-white" /></div>
                             <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-white/20 rounded-lg"><CheckCircle2 className="w-5 h-5 text-white" /></div>
-                                    <h4 className="font-semibold text-base text-white">MedSafe Protected</h4>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="p-2 bg-blue-500/20 rounded-xl"><CheckCircle2 className="w-5 h-5 text-blue-400" /></div>
+                                    <h4 className="font-bold text-base text-white tracking-tight">{t('protected')}</h4>
                                 </div>
-                                <Separator className="bg-primary-foreground/20 mb-3" />
-                                <p className="text-primary-foreground/90 text-xs leading-relaxed font-medium">New prescriptions are automatically cross-checked against your saved profile.</p>
+                                <Separator className="bg-white/10 mb-4" />
+                                <p className="text-blue-100/70 text-xs leading-relaxed font-light">{t('protected_desc')}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Main: Medications */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                            <div className="border-b border-slate-100 px-6 py-5 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100"><Pill className="w-5 h-5 text-emerald-600" /></div>
+                        <div className="bg-white border border-slate-200/60 rounded-[24px] shadow-sm overflow-hidden">
+                            <div className="border-b border-slate-100/50 px-8 py-6 flex items-center justify-between bg-white">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-blue-50/50 flex items-center justify-center border border-blue-100/30"><Pill className="w-6 h-6 text-blue-600" /></div>
                                     <div>
-                                        <h2 className="text-lg font-bold text-slate-900">My Medications</h2>
-                                        <p className="text-xs text-slate-500 font-medium">Long-term prescriptions saved to your profile</p>
+                                        <h2 className="text-xl font-bold text-sky-950 tracking-tighter">{t('medications')}</h2>
+                                        <p className="text-xs text-slate-400 font-light">{t('my_meds_desc')}</p>
                                     </div>
                                 </div>
-                                <span className="text-xs font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">{savedMeds.length} saved</span>
+                                <span className="text-[10px] font-bold text-blue-600 bg-blue-50/50 px-3 py-1 rounded-full border border-blue-100/30 uppercase tracking-widest">{savedMeds.length} {t('saved')}</span>
                             </div>
 
-                            <div className="p-6">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Add Medication</p>
+                            <div className="p-8">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">{t('add_med')}</p>
 
                                 {/* Search */}
                                 <div className="relative mb-4">

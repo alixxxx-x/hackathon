@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Plus, Trash2, AlertTriangle, CheckCircle, AlertCircle, Info, Sparkles, ShieldCheck, Activity, Languages, Stethoscope } from 'lucide-react';
+import { useLanguage } from "../contexts/LanguageContext";
 import api from '@/api/api';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ const MOCK_DRUGS = [
 ];
 
 const Interactions = () => {
+    const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [selectedDrugs, setSelectedDrugs] = useState([]);
@@ -73,11 +75,14 @@ const Interactions = () => {
         try {
             // We only need the names for the analysis engine
             const drugNames = selectedDrugs.map(d => d.brand_name || d.generic_name);
-            const response = await api.post("/interactions/analyze/", { drugs: drugNames });
+            const response = await api.post("/interactions/analyze/", { 
+                drugs: drugNames,
+                user_role: "patient"
+            });
             setResults(response.data);
         } catch (error) {
             console.error("Error analyzing interactions:", error);
-            alert("Analysis failed. Please ensure the MedSafe engine is running.");
+            alert(t('analysis_failed') || "Analysis failed.");
         } finally {
             setAnalyzing(false);
         }
@@ -88,25 +93,25 @@ const Interactions = () => {
             {/* Minimalist Apple-Style Header in a Box */}
             <div className="mb-14 p-10 md:p-12 bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100/50 dark:border-blue-900/20 rounded-[2rem] text-center max-w-4xl mx-auto shadow-sm">
                 <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight mb-4">
-                    Clinical Interaction Analysis.
+                    {t('inter_title')}
                 </h1>
-                
+
                 <p className="text-base text-slate-500 leading-relaxed mb-8 max-w-2xl mx-auto">
-                    Cross-reference patient medication regimens against over 236,000 clinical records. Evidence-based risk assessments with multi-lingual patient explanations.
+                    {t('inter_desc')}
                 </p>
 
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-slate-500 font-medium">
                     <div className="flex items-center gap-2">
                         <Activity className="w-4 h-4 text-blue-400" />
-                        <span>Real-time Sync</span>
+                        <span>{t('real_time_sync')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <ShieldCheck className="w-4 h-4 text-blue-400" />
-                        <span>DDInter Verified</span>
+                        <span>{t('ddinter_verified')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Languages className="w-4 h-4 text-blue-400" />
-                        <span>Multi-Lingual</span>
+                        <span>{t('multi_lingual')}</span>
                     </div>
                 </div>
             </div>
@@ -122,8 +127,8 @@ const Interactions = () => {
                                     <Search className="w-4 h-4" />
                                 </div>
                                 <div>
-                                    <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Add Medications</h2>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Search by generic or brand name</p>
+                                    <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">{t('add_meds')}</h2>
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{t('search_generic')}</p>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +139,7 @@ const Interactions = () => {
                             <div className="relative group">
                                 <input
                                     type="text"
-                                    placeholder="Search e.g. Doliprane..."
+                                    placeholder={t('search_placeholder')}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full pl-9 pr-3 h-10 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md text-sm text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
@@ -144,7 +149,7 @@ const Interactions = () => {
                                 {suggestions.length > 0 && (
                                     <div className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-xl overflow-hidden ring-1 ring-black/5">
                                         <div className="px-3 py-2 bg-zinc-50/80 dark:bg-zinc-900/80 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                                            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">Suggestions</p>
+                                            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">{t('suggestions')}</p>
                                             {searching && <div className="w-3 h-3 border border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>}
                                         </div>
                                         <div className="max-h-52 overflow-y-auto py-1">
@@ -171,12 +176,12 @@ const Interactions = () => {
                             {/* Selected List Section */}
                             <div className="mt-6">
                                 <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                                    Selected Drugs <span className="text-zinc-400 font-normal">({selectedDrugs.length})</span>
+                                    {t('selected_drugs')} <span className="text-zinc-400 font-normal">({selectedDrugs.length})</span>
                                 </h3>
 
                                 {selectedDrugs.length === 0 ? (
                                     <div className="text-center py-8 px-4 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-900/20">
-                                        <p className="text-xs text-zinc-400">No drugs added yet</p>
+                                        <p className="text-xs text-zinc-400">{t('no_drugs')}</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
@@ -208,12 +213,12 @@ const Interactions = () => {
                                     {analyzing ? (
                                         <>
                                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                            <span>Analyzing...</span>
+                                            <span>{t('analyzing')}</span>
                                         </>
                                     ) : (
                                         <>
                                             <Activity className="w-4 h-4" />
-                                            <span>Analyze Interactions</span>
+                                            <span>{t('analyze_btn')}</span>
                                         </>
                                     )}
                                 </button>
@@ -225,7 +230,7 @@ const Interactions = () => {
                         <div className="flex gap-2">
                             <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                             <p className="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
-                                <span className="font-semibold">Clinical Note:</span> This tool uses the DDInter database. Results are for information only. Always consult a doctor.
+                                <span className="font-semibold">{t('clinical_note')}</span> {t('disclaimer')}
                             </p>
                         </div>
                     </div>
@@ -237,13 +242,13 @@ const Interactions = () => {
                         <div className="h-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8 flex flex-col justify-center shadow-sm">
                             <div className="max-w-2xl mx-auto space-y-8 w-full">
                                 <div className="border-b border-zinc-100 dark:border-zinc-800 pb-6 mb-6 flex items-start gap-4">
-                                    <div className="p-3 bg-zinc-50 dark:bg-zinc-900 text-zinc-400 rounded-xl shrink-0 border border-zinc-100 dark:border-zinc-800">
-                                        <ShieldCheck className="w-6 h-6" />
+                                    <div className="p-4 bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 rounded-[16px] shrink-0 border border-sky-100 dark:border-sky-900/30">
+                                        <ShieldCheck className="w-7 h-7" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Interaction Analysis Engine</h3>
+                                        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t('analysis_engine')}</h3>
                                         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                                            Search and select at least two medications to evaluate their potential clinical interactions. Our engine cross-references the DDInter database containing over 236,000 documented drug-drug interactions.
+                                            {t('engine_desc')}
                                         </p>
                                     </div>
                                 </div>
@@ -252,7 +257,7 @@ const Interactions = () => {
                                     <div className="p-5 bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-xl">
                                         <h4 className="text-sm font-bold text-red-700 dark:text-red-400 flex items-center gap-2 mb-2">
                                             <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                                            Major Interaction
+                                            {t('major_inter')}
                                         </h4>
                                         <p className="text-xs text-red-600/80 dark:text-red-300/80 leading-relaxed">
                                             Highly clinically significant. Risk of dangerous adverse effects or therapeutic failure. Avoid combination if possible or monitor strictly.
@@ -262,19 +267,19 @@ const Interactions = () => {
                                     <div className="p-5 bg-yellow-50/50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-xl">
                                         <h4 className="text-sm font-bold text-yellow-700 dark:text-yellow-400 flex items-center gap-2 mb-2">
                                             <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-                                            Moderate Interaction
+                                            {t('moderate_inter')}
                                         </h4>
                                         <p className="text-xs text-yellow-600/80 dark:text-yellow-300/80 leading-relaxed">
                                             Moderately clinically significant. Usually requires dosage adjustments, altered timing of administration, or close clinical monitoring.
                                         </p>
                                     </div>
 
-                                    <div className="p-5 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl sm:col-span-2">
-                                        <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2 mb-2">
-                                            <span className="w-2 h-2 rounded-full bg-zinc-400"></span>
-                                            Minor Interaction
+                                    <div className="p-5 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl sm:col-span-2">
+                                        <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-2 mb-2">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                            {t('minor_inter')}
                                         </h4>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                                        <p className="text-xs text-emerald-600/80 dark:text-emerald-300/80 leading-relaxed">
                                             Minimal clinical significance. May cause minor effects but typically does not require a change in therapy. Standard monitoring is advised.
                                         </p>
                                     </div>
@@ -293,8 +298,8 @@ const Interactions = () => {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">Scanning DDInter...</h3>
-                                <p className="text-sm text-slate-500 font-medium">Cross-checking {selectedDrugs.length} medication pairs</p>
+                                <h3 className="text-xl font-bold text-slate-900 mb-2">{t('scanning_db')}</h3>
+                                <p className="text-sm text-slate-500 font-medium">{t('pairs_analyzed')} ({selectedDrugs.length})</p>
                             </div>
                         </div>
                     )}
@@ -303,9 +308,9 @@ const Interactions = () => {
                         <div className="space-y-6 animate-in slide-in-from-bottom-6 duration-700">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
                                 <div className="flex items-center gap-3">
-                                    <h3 className="text-2xl font-bold text-slate-900">Analysis Results</h3>
+                                    <h3 className="text-2xl font-bold text-slate-900">{t('analysis_results')}</h3>
                                     <Badge variant="secondary" className="bg-white border border-slate-100 text-slate-600 px-4 py-1 rounded-full font-bold shadow-sm">
-                                        {results.explained_pairs?.length || 0} pairs analyzed
+                                        {results.explained_pairs?.length || 0} {t('pairs_analyzed')}
                                     </Badge>
                                 </div>
 
@@ -342,7 +347,7 @@ const Interactions = () => {
                                     <div key={idx} className="bg-white dark:bg-zinc-950 overflow-hidden shadow-sm border border-zinc-200 dark:border-zinc-800 rounded-2xl transition-all" style={{ borderColor: res.color ? `${res.color}44` : undefined }}>
                                         {/* Top Color Bar */}
                                         <div className="h-2 w-full" style={{ backgroundColor: res.color || '#94a3b8' }}></div>
-                                        
+
                                         <div>
                                             <div className="p-6">
                                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -411,8 +416,9 @@ const Interactions = () => {
                                                                 'PROCEED WITH CARE'}
                                                     </span>
                                                 </div>
-                                                <button className="h-8 px-3 text-[10px] font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-md transition-all active:scale-95">
-                                                    REPORT INCIDENT
+                                                <button className="flex items-center gap-2 h-9 px-4 text-[12px] font-semibold text-white bg-red-600 hover:bg-red-700 rounded-[10px] transition-all active:scale-[0.98] shadow-sm shadow-red-600/20">
+                                                    <AlertTriangle className="w-3.5 h-3.5" />
+                                                    {t('report_incident')}
                                                 </button>
                                             </div>
                                         </div>

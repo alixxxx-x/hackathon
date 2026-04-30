@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     DDINTER_CSV_GLOB: str = "ddinter_downloads_code_*.csv"
 
     # Fuzzy match threshold for drug name autocomplete (0–100)
-    FUZZY_THRESHOLD: int = 80
+    FUZZY_THRESHOLD: int = 70
 
     # Interaction level → risk label mapping
     LEVEL_MAP: dict = {

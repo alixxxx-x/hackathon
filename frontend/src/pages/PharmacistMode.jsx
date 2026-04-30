@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Search, 
-    Trash2, 
-    Activity, 
-    Database, 
-    ExternalLink, 
-    FileText, 
-    ShieldCheck, 
-    Clock, 
+import {
+    Search,
+    Trash2,
+    Activity,
+    Database,
+    ExternalLink,
+    FileText,
+    ShieldCheck,
+    Clock,
     Stethoscope,
     Info,
     ArrowLeft
@@ -64,11 +64,14 @@ const PharmacistMode = () => {
         setAnalyzing(true);
         try {
             const drugNames = [drugA, drugB].map(d => d.brand_name || d.generic_name);
-            const response = await api.post("/interactions/analyze/", { drugs: drugNames });
+            const response = await api.post("/interactions/analyze/", { 
+                drugs: drugNames,
+                user_role: "pharmacist"
+            });
             const pairs = response.data.explained_pairs || [];
             setResult(pairs[0] || null);
-        } catch (e) { 
-            console.error(e); 
+        } catch (e) {
+            console.error(e);
         }
         finally { setAnalyzing(false); }
     };
@@ -95,7 +98,7 @@ const PharmacistMode = () => {
                         </p>
                     </div>
                 </div>
-                <button 
+                <button
                     onClick={() => navigate('/dashboard')}
                     className="inline-flex items-center gap-2 h-9 px-4 rounded-md text-sm font-medium border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shrink-0"
                 >
@@ -129,7 +132,7 @@ const PharmacistMode = () => {
                                         </button>
                                     </div>
                                 ) : (
-                                    <button 
+                                    <button
                                         onClick={() => setActiveSlot("A")}
                                         className={`w-full text-left px-3 py-3 rounded-md border border-dashed transition-colors ${activeSlot === "A" ? "border-primary bg-primary/5 text-primary" : "border-zinc-200 dark:border-zinc-800 text-zinc-400"}`}
                                     >
@@ -152,7 +155,7 @@ const PharmacistMode = () => {
                                         </button>
                                     </div>
                                 ) : (
-                                    <button 
+                                    <button
                                         onClick={() => setActiveSlot("B")}
                                         className={`w-full text-left px-3 py-3 rounded-md border border-dashed transition-colors ${activeSlot === "B" ? "border-primary bg-primary/5 text-primary" : "border-zinc-200 dark:border-zinc-800 text-zinc-400"}`}
                                     >

@@ -33,7 +33,7 @@ export default function DashboardLayout() {
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage className="capitalize">
-                      {pathSegments[pathSegments.length - 1]?.replace(/-/g, " ") || "Dashboard"}
+                    {pathSegments[pathSegments.length - 1]?.replace(/-/g, " ") || "Dashboard"}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>

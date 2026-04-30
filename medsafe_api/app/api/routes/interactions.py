@@ -5,7 +5,10 @@ from app.services.ddinter_service import ddinter_service
 from app.services.interaction_service import check_interactions
 from app.services.ml_service import ml_service
 from app.api.routes.explain_router import explain_interactions, ExplainRequest, ExplainResponse, InteractionPair
+import logging
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -38,6 +41,7 @@ async def analyze_interactions(body: InteractionRequest) -> ExplainResponse:
     clinical explanations for all found pairs using BioMistral.
     Results include English explanations and Algerian Darija translations.
     """
+    logger.info("analyze_interactions received body: %s", body.model_dump())
     if len(body.drugs) < 2:
         raise HTTPException(status_code=422, detail="At least 2 drugs required.")
 
@@ -61,6 +65,7 @@ async def analyze_interactions(body: InteractionRequest) -> ExplainResponse:
     req = ExplainRequest(
         drugs_submitted=check_result.drugs_submitted,
         pairs=pairs_for_explain,
+        user_role=body.user_role,
     )
 
     return await explain_interactions(req)

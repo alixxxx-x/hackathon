@@ -33,6 +33,7 @@ class ConversationMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, description="The user's message.")
     session_id: Optional[str] = Field(None, description="Session ID to continue. Omit to start a new session.")
+    user_role: Literal["patient", "pharmacist"] = Field("pharmacist", description="The role of the user")
     max_tokens: int = Field(512, ge=64, le=1024, description="Maximum tokens to generate.")
     temperature: float = Field(0.4, ge=0.0, le=1.0, description="Sampling temperature.")
 
@@ -76,6 +77,7 @@ async def chat(body: ChatRequest, db: Session = Depends(get_db)) -> ChatResponse
     try:
         reply_text = generate_conversation_reply(
             history=history_dicts,
+            role=body.user_role,
             max_tokens=body.max_tokens,
             temperature=body.temperature,
         )

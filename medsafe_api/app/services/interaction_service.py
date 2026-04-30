@@ -40,18 +40,39 @@ def _risk_color(risk: str) -> str:
 def resolve_drug_name(query: str) -> DrugMatch:
     """
     Try exact match first, then fall back to best fuzzy hit.
+    If multi-word query fails, try matching individual words (for long Algerian generic names).
     Returns a DrugMatch with score=100 for exact hits.
     """
-    info = ddinter_service.resolve_drug(query)
+    clean_query = query.strip()
+    if not clean_query:
+        return DrugMatch(name=query, ddinter_id=None, score=0)
+
+    # 1. Try exact/simple lookup
+    info = ddinter_service.resolve_drug(clean_query)
     if info:
         return DrugMatch(name=info.name, ddinter_id=info.ddinter_id, score=100)
 
-    hits = ddinter_service.fuzzy_search(query, limit=1)
-    if hits:
+    # 2. Try fuzzy search on full query
+    hits = ddinter_service.fuzzy_search(clean_query, limit=1)
+    if hits and hits[0][2] >= settings.FUZZY_THRESHOLD:
         name, ddinter_id, score = hits[0]
         return DrugMatch(name=name, ddinter_id=ddinter_id, score=score)
 
-    return DrugMatch(name=query.strip(), ddinter_id=None, score=0)
+    # 3. Fallback: Try word-by-word matching for long names (e.g. "ATORVASTATINE CALCIUM...")
+    words = [w for w in clean_query.replace('/', ' ').replace(',', ' ').split() if len(w) > 3]
+    best_match = None
+    
+    for word in words:
+        word_hits = ddinter_service.fuzzy_search(word, limit=1)
+        if word_hits and word_hits[0][2] > (best_match.score if best_match else 60):
+            name, ddinter_id, score = word_hits[0]
+            # Boost score slightly because it's a partial match that we are confident in
+            best_match = DrugMatch(name=name, ddinter_id=ddinter_id, score=score)
+
+    if best_match and best_match.score >= settings.FUZZY_THRESHOLD:
+        return best_match
+
+    return DrugMatch(name=clean_query, ddinter_id=None, score=0)
 
 
 def check_interactions(drug_names: List[str]) -> InteractionResponse:

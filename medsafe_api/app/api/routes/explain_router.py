@@ -9,7 +9,7 @@ from BioMistral, with Algerian Darija translations.
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 import asyncio
-from typing import List, Optional
+from typing import List, Optional, Literal
 import logging
 
 from app.services.biomistral_service import generate_explanation
@@ -38,6 +38,7 @@ class ExplainRequest(BaseModel):
     """
     drugs_submitted: List[str] = Field(default_factory=list)
     pairs: List[InteractionPair]
+    user_role: Literal["patient", "pharmacist"] = Field("pharmacist", description="The role of the user requesting the explanation")
 
 
 class PairExplanation(BaseModel):
@@ -74,6 +75,7 @@ async def explain_interactions(body: ExplainRequest) -> ExplainResponse:
         raise HTTPException(status_code=400, detail="No interaction pairs provided.")
 
     partial_results = []
+    logger.info("Explaining interactions for role: %s", body.user_role)
 
     for pair in body.pairs:
         if pair.level in ("UNKNOWN", "NOT_IN_DB"):
@@ -88,13 +90,16 @@ async def explain_interactions(body: ExplainRequest) -> ExplainResponse:
                     drug_b=pair.drug_b,
                     level=pair.level,
                     original_level=pair.original_level or pair.level.capitalize(),
+                    role=body.user_role,
                 )
             except Exception as exc:
+                import traceback
                 logger.error(
-                    "BioMistral inference failed for %s+%s: %s",
+                    "BioMistral inference failed for %s+%s: %s\n%s",
                     pair.drug_a,
                     pair.drug_b,
                     exc,
+                    traceback.format_exc()
                 )
                 explanation = _fallback_explanation(pair.level)
 

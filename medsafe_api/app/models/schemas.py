@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 
 class InteractionRequest(BaseModel):
@@ -9,6 +9,7 @@ class InteractionRequest(BaseModel):
         description="List of drug names (at least 2) to check for interactions.",
         examples=[["Aspirin", "Ibuprofen", "Metformin"]],
     )
+    user_role: Literal["patient", "pharmacist"] = Field("pharmacist", description="The role of the user requesting the analysis")
 
     @field_validator("drugs")
     @classmethod

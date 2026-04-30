@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ArrowRight, ShieldCheck, Activity, Languages, Stethoscope, FileText, Sparkles, ChevronRight, ScanLine, BookOpen, Users } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ShieldCheck, Activity, Languages, Stethoscope, FileText, Sparkles, ChevronRight, ScanLine, BookOpen, Users, Heart, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../contexts/LanguageContext";
 
 import imgStethoscope from "@/assets/etactics-inc-g3PsF4_y7ZY-unsplash.jpg";
 import imgNurse from "@/assets/jeshoots-com-l0j0DHVWcIE-unsplash.jpg";
@@ -14,322 +15,354 @@ import imgGlovesHeart from "@/assets/anton-8q-U8X1zkvI-unsplash.jpg";
 
 const fade = {
     hidden: { opacity: 0, y: 20 },
-    show: (d = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: d * 0.12, ease: "easeOut" } }),
+    show: (d = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: d * 0.15, ease: "easeOut" } }),
 };
 
 function Home() {
+    const { t } = useLanguage();
     return (
         <div className="w-full bg-white dark:bg-zinc-950 font-sans">
 
             {/* ────────────── INTRO ────────────── */}
-            <section className="relative">
+            <section className="relative h-screen min-h-[600px] flex flex-col justify-center overflow-hidden">
                 {/* BG image */}
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${imgBlisterPacks})` }} />
-                {/* Content on top */}
-                <div className="relative z-10 pt-32 pb-20 lg:pt-44 lg:pb-28 bg-black/50">
-                    <div className="max-w-4xl mx-auto px-6 text-center">
-                        <motion.h1
-                            variants={fade} initial="hidden" animate="show" custom={0}
-                            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] mb-6"
-                        >
-                            Check your medications{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-                                before they clash.
-                            </span>
-                        </motion.h1>
+                
+                {/* Dark overlay & Upward Gradient Shadow */}
+                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-                        <motion.p
-                            variants={fade} initial="hidden" animate="show" custom={1}
-                            className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed"
-                        >
-                            MedSafe checks drug interactions against 236,000+ clinical records and explains results in Algerian Darija — so every patient and pharmacist can understand.
-                        </motion.p>
+                {/* Content */}
+                <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center -mt-10">
+                    <motion.h1
+                        variants={fade} initial="hidden" animate="show" custom={0}
+                        className="text-5xl md:text-7xl lg:text-[76px] font-semibold tracking-tighter text-white leading-[1.05] mb-6 drop-shadow-2xl"
+                        style={{ textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}
+                    >
+                        {t('hero_title')}
+                    </motion.h1>
 
-                        <motion.div
-                            variants={fade} initial="hidden" animate="show" custom={2}
-                            className="flex flex-col sm:flex-row justify-center gap-3"
-                        >
-                            <Link to="/interactions">
-                                <Button size="lg" className="h-12 px-7 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base shadow-lg transition-all hover:scale-[1.02] group">
-                                    Check Interactions
-                                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                                </Button>
-                            </Link>
-                            <Link to="/register">
-                                <Button size="lg" className="h-12 px-7 rounded-xl bg-white text-slate-900 font-semibold text-base hover:bg-white/90 shadow-sm border border-slate-100 transition-all hover:scale-[1.02]">
-                                    <Stethoscope className="mr-2 w-4 h-4 text-slate-500" />
-                                    Join MedSafe
-                                </Button>
-                            </Link>
-                        </motion.div>
+                    <motion.p
+                        variants={fade} initial="hidden" animate="show" custom={1}
+                        className="text-[15px] md:text-[16px] text-white/90 max-w-2xl mx-auto mb-10 font-light leading-relaxed drop-shadow-xl"
+                        style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}
+                    >
+                        {t('hero_desc')}
+                    </motion.p>
 
-                    </div>
+                    <motion.div
+                        variants={fade} initial="hidden" animate="show" custom={2}
+                        className="flex justify-center"
+                    >
+                        <Link to="/interactions">
+                            <button className="h-11 px-8 rounded-full bg-white text-zinc-900 font-semibold text-[13px] hover:bg-zinc-100 transition-all flex items-center gap-2 shadow-2xl hover:scale-105">
+                                {t('try_medora')} <ArrowUpRight className="w-4 h-4 text-zinc-600" strokeWidth={2.5} />
+                            </button>
+                        </Link>
+                    </motion.div>
                 </div>
+
             </section>
 
 
             {/* ────────────── HOW IT WORKS ────────────── */}
-            <section className="py-20 lg:py-28 border-t border-slate-100 dark:border-zinc-800">
-                <div className="max-w-6xl mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-80px" }}
-                        className="text-center mb-16"
-                    >
-                        <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">How it works</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Three steps to safer prescriptions.</h2>
-                        <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                            Whether you're a patient checking your own pills or a pharmacist validating an ordonnance, MedSafe makes it simple.
-                        </p>
-                    </motion.div>
+            <section className="py-24 lg:py-32 bg-slate-50/50 dark:bg-zinc-900/20 border-t border-slate-100 dark:border-zinc-800">
+                <div className="max-w-7xl mx-auto px-6">
+                    
+                    {/* Header: Title left, Subtitle right */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 lg:mb-24">
+                        <motion.h2 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-4xl md:text-5xl font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.1] max-w-md"
+                        >
+                            {t('effortless_safety')}
+                        </motion.h2>
+                        <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="text-[15px] text-slate-600 max-w-sm leading-relaxed"
+                        >
+                            {t('seamless_exp')}
+                        </motion.p>
+                    </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {[
-                            {
-                                step: "01",
-                                icon: <FileText className="w-5 h-5" />,
-                                title: "Enter your medications",
-                                desc: "Type the names of your drugs manually, or use our built-in OCR scanner to photograph your prescription. MedSafe extracts the medication names automatically — no medical knowledge required.",
-                                color: "#3b82f6",
-                            },
-                            {
-                                step: "02",
-                                icon: <Activity className="w-5 h-5" />,
-                                title: "We check for interactions",
-                                desc: "Your medication list is instantly cross-referenced against the DDInter database containing 236,834 verified drug-drug interactions. Each pair is classified as dangerous, caution, or safe.",
-                                color: "#6366f1",
-                            },
-                            {
-                                step: "03",
-                                icon: <Languages className="w-5 h-5" />,
-                                title: "Get results in Darija",
-                                desc: "Gemini AI translates every medical warning into plain Algerian Darija. No more confusing French or English medical jargon — just clear advice anyone can act on.",
-                                color: "#06b6d4",
-                            },
-                        ].map((item, i) => (
-                            <motion.div
-                                key={item.step}
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-60px" }}
-                                transition={{ delay: i * 0.1 }}
-                                style={{ borderTop: `3px solid ${item.color}` }}
-                                className="bg-white dark:bg-zinc-900 rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow"
+                    {/* Content Grid */}
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+                        
+                        {/* Left Column (Steps 1 & 2) */}
+                        <div className="flex-1 w-full flex flex-col gap-6 lg:gap-8">
+                            <motion.div 
+                                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+                                className="bg-white dark:bg-zinc-950 border border-slate-200/60 dark:border-zinc-800 rounded-3xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all"
                             >
-                                <div
-                                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold mb-5"
-                                    style={{ backgroundColor: item.color }}
-                                >
-                                    {item.step}
-                                </div>
-                                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl mb-4" style={{ backgroundColor: `${item.color}15`, color: item.color }}>
-                                    {item.icon}
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
-                                <p className="text-slate-500 leading-relaxed">{item.desc}</p>
+                                <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-300 italic mb-6">01</p>
+                                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">{t('step1_title')}</h3>
+                                <p className="text-[15px] text-slate-600 leading-relaxed">{t('step1_desc')}</p>
                             </motion.div>
-                        ))}
+                            
+                            <motion.div 
+                                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+                                className="bg-white dark:bg-zinc-950 border border-slate-200/60 dark:border-zinc-800 rounded-3xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all"
+                            >
+                                <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-300 italic mb-6">02</p>
+                                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">{t('step2_title')}</h3>
+                                <p className="text-[15px] text-slate-600 leading-relaxed">{t('step2_desc')}</p>
+                            </motion.div>
+                        </div>
+
+                        {/* Middle Column (Tall Image) */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
+                            className="w-full lg:w-[380px] xl:w-[420px] shrink-0 h-[500px] lg:h-[650px] rounded-[32px] overflow-hidden shadow-2xl relative"
+                        >
+                            <img src={imgStethoscope} alt="Medora checking process" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/5" />
+                        </motion.div>
+
+                        {/* Right Column (Steps 3 & 4) */}
+                        <div className="flex-1 w-full flex flex-col gap-6 lg:gap-8">
+                            <motion.div 
+                                initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }}
+                                className="bg-white dark:bg-zinc-950 border border-slate-200/60 dark:border-zinc-800 rounded-3xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all"
+                            >
+                                <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-300 italic mb-6">03</p>
+                                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">{t('step3_title')}</h3>
+                                <p className="text-[15px] text-slate-600 leading-relaxed">{t('step3_desc')}</p>
+                            </motion.div>
+                            
+                            <motion.div 
+                                initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
+                                className="bg-white dark:bg-zinc-950 border border-slate-200/60 dark:border-zinc-800 rounded-3xl p-8 lg:p-10 shadow-sm hover:shadow-md transition-all"
+                            >
+                                <p className="text-[15px] font-semibold text-slate-900 dark:text-slate-300 italic mb-6">04</p>
+                                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">{t('step4_title')}</h3>
+                                <p className="text-[15px] text-slate-600 leading-relaxed">{t('step4_desc')}</p>
+                            </motion.div>
+                        </div>
+
                     </div>
                 </div>
             </section>
 
 
-            {/* ────────────── FEATURE 1 — Clinical Database ────────────── */}
-            <section className="py-20 lg:py-28 bg-slate-50 dark:bg-zinc-900/50 border-t border-slate-100 dark:border-zinc-800">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5 }}
-                            className="order-2 lg:order-1"
-                        >
-                            <img
-                                src={imgLabScientist}
-                                alt="Scientist analyzing a sample, representing clinical-grade drug verification"
-                                className="w-full h-[420px] object-cover rounded-3xl shadow-lg"
-                            />
-                        </motion.div>
+            {/* ────────────── WHO IS MEDORA FOR ────────────── */}
+            <section className="py-24 md:py-32 bg-[#f4f4f5] dark:bg-zinc-900 flex justify-center border-t border-slate-100 dark:border-zinc-800">
+                <div className="w-full max-w-[1150px] px-6 md:px-10">
+                    
+                    {/* Header Row */}
+                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 lg:gap-24 mb-16 md:mb-20">
+                        <h2 className="text-4xl md:text-[46px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.25] lg:w-1/2">
+                            {t('intel_safety')}
+                        </h2>
+                        <p className="text-[13.5px] text-[#4a4a4a] dark:text-slate-400 leading-[1.8] font-normal lg:w-1/2">
+                            {t('intel_safety_desc')}
+                        </p>
+                    </div>
 
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="order-1 lg:order-2"
-                        >
-                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/10 text-blue-600 mb-5">
-                                <ShieldCheck className="w-5 h-5" />
+                    {/* Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                        {/* Card 1 */}
+                        <div className="bg-white dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800 rounded-[28px] p-8 pb-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-start cursor-pointer">
+                            <div className="w-[52px] h-[52px] bg-[#0B0D17] rounded-[16px] flex items-center justify-center mb-8 shrink-0">
+                                <Heart className="w-[22px] h-[22px] text-white" strokeWidth={2.5} />
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
-                                Backed by real clinical data.
-                            </h2>
-                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
-                                MedSafe doesn't guess and it doesn't hallucinate. Every interaction result comes from <strong className="text-slate-700 dark:text-slate-300">DDInter</strong>, a peer-reviewed pharmacological database maintained by researchers — not scraped from the internet.
+                            <h3 className="text-[18px] font-semibold text-slate-900 dark:text-white mb-3 tracking-tight">{t('card_patients_title')}</h3>
+                            <p className="text-[13.5px] text-slate-500 dark:text-slate-400 leading-[1.7] font-normal">
+                                {t('card_patients_1')} {t('card_patients_2')}
                             </p>
-                            <p className="text-base text-slate-500 leading-relaxed mb-6">
-                                The database covers <strong className="text-slate-700 dark:text-slate-300">236,834 known drug-drug interactions</strong> across <strong className="text-slate-700 dark:text-slate-300">1,833 approved drugs</strong>. Each interaction is categorized by severity level so you know exactly how serious the risk is — from minor caution to life-threatening danger.
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                                <Badge className="bg-red-50 text-red-600 border-red-200 px-3 py-1">Dangerous</Badge>
-                                <Badge className="bg-amber-50 text-amber-600 border-amber-200 px-3 py-1">Caution</Badge>
-                                <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 px-3 py-1">Safe</Badge>
+                        </div>
+
+                        {/* Card 2 */}
+                        <div className="bg-white dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800 rounded-[28px] p-8 pb-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-start cursor-pointer">
+                            <div className="w-[52px] h-[52px] bg-[#0B0D17] rounded-[16px] flex items-center justify-center mb-8 shrink-0">
+                                <Stethoscope className="w-[22px] h-[22px] text-white" strokeWidth={2.5} />
                             </div>
-                        </motion.div>
+                            <h3 className="text-[18px] font-semibold text-slate-900 dark:text-white mb-3 tracking-tight">{t('card_pharm_title')}</h3>
+                            <p className="text-[13.5px] text-slate-500 dark:text-slate-400 leading-[1.7] font-normal">
+                                {t('card_pharm_1')} {t('card_pharm_2')} {t('card_pharm_3')}
+                            </p>
+                        </div>
+
+                        {/* Card 3 */}
+                        <div className="bg-white dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800 rounded-[28px] p-8 pb-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-start cursor-pointer">
+                            <div className="w-[52px] h-[52px] bg-[#0B0D17] rounded-[16px] flex items-center justify-center mb-8 shrink-0">
+                                <Building2 className="w-[22px] h-[22px] text-white" strokeWidth={2.5} />
+                            </div>
+                            <h3 className="text-[18px] font-semibold text-slate-900 dark:text-white mb-3 tracking-tight">{t('card_system_title')}</h3>
+                            <p className="text-[13.5px] text-slate-500 dark:text-slate-400 leading-[1.7] font-normal">
+                                {t('card_system_1')} {t('card_system_2')}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
 
 
-            {/* ────────────── FEATURE 2 — Darija Translation ────────────── */}
-            <section className="py-20 lg:py-28 border-t border-slate-100 dark:border-zinc-800">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 mb-5">
-                                <Languages className="w-5 h-5" />
+            {/* ────────────── TESTIMONIALS ────────────── */}
+            <section className="py-24 bg-white dark:bg-zinc-950 overflow-hidden border-t border-slate-100 dark:border-zinc-800">
+                <div className="w-full max-w-[1300px] mx-auto px-6">
+                    <h2 className="text-4xl md:text-[42px] font-medium text-center text-slate-900 dark:text-white mb-16 tracking-tight">
+                        {t('testimonials_title')}
+                    </h2>
+
+                    <div className="flex items-center justify-center gap-6 lg:gap-12">
+                        
+                        {/* Left Card (Inactive) */}
+                        <div className="relative hidden md:block">
+                            <button className="absolute top-10 -right-8 lg:-right-12 z-10 w-[52px] h-[52px] bg-black dark:bg-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-xl">
+                                <ArrowRight className="w-5 h-5 text-white dark:text-black rotate-180" />
+                            </button>
+                            
+                            <div className="w-[260px] h-[300px] rounded-[40px] border-[14px] border-slate-100 dark:border-zinc-800 overflow-hidden shrink-0 mt-6">
+                                <img src={imgLabScientist} alt="Pharmacist" className="w-full h-full object-cover" />
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
-                                Medical advice you can actually read.
-                            </h2>
-                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
-                                Drug warnings printed in French or English are useless if your patient speaks Darija. MedSafe uses <strong className="text-slate-700 dark:text-slate-300">Google Gemini AI</strong> to translate complex pharmacological language into plain Algerian Darija.
-                            </p>
-                            <p className="text-base text-slate-500 leading-relaxed mb-6">
-                                This means a grandmother picking up her heart medication can finally understand what her doctor meant when he said "contraindicated with NSAIDs." We turn clinical jargon into sentences real people use every day.
-                            </p>
-                            <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-5 border border-slate-200 dark:border-zinc-700">
-                                <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                                    <Sparkles className="w-3.5 h-3.5" /> Example — Darija output
+                        </div>
+
+                        {/* Center Card (Active) */}
+                        <div className="bg-[#eef2ff] dark:bg-indigo-950/30 rounded-[40px] p-3 flex flex-col sm:flex-row gap-6 w-full max-w-[650px] shadow-sm shrink-0 relative z-20">
+                            {/* Image */}
+                            <div className="w-full sm:w-[280px] h-[340px] rounded-[32px] overflow-hidden shrink-0">
+                                <img src={imgNurse} alt="Dr. Amina" className="w-full h-full object-cover object-top" />
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="flex-1 py-8 pr-8 flex flex-col">
+                                <div className="mb-5">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 11V18H4V11H7C7 8.79086 5.20914 7 3 7V4C6.86599 4 10 7.13401 10 11ZM20 11V18H14V11H17C17 8.79086 15.2091 7 13 7V4C16.866 4 20 7.13401 20 11Z" fill="#c7d2fe" className="dark:fill-indigo-900"/>
+                                    </svg>
+                                </div>
+                                <p className="text-[13.5px] text-indigo-950 dark:text-indigo-200 leading-[1.8] mb-8 font-medium">
+                                    {t('dr_amina_quote')}
                                 </p>
-                                <p className="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">
-                                    "Hadou zouj dwa ma yemchiwch m3a ba3d — yqadrou ydirou nezif fel me3da. Lazem techraver m3a tbib te3ek 9bel ma techrobhom m3a ba3d."
-                                </p>
+                                <div className="mt-auto">
+                                    <h4 className="font-bold text-indigo-950 dark:text-white text-[15px] tracking-tight">Dr. Amina</h4>
+                                    <p className="text-[13px] text-indigo-800/70 dark:text-indigo-300/70 font-semibold mt-0.5">Clinical Pharmacist</p>
+                                </div>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                        >
-                            <img
-                                src={imgNurse}
-                                alt="Healthcare professional explaining medication guidance to patients"
-                                className="w-full h-[420px] object-cover object-top rounded-3xl shadow-lg"
-                            />
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-
-            {/* ────────────── FEATURE 3 — OCR + Pharmacist ────────────── */}
-            <section className="py-20 lg:py-28 bg-slate-50 dark:bg-zinc-900/50 border-t border-slate-100 dark:border-zinc-800">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5 }}
-                            className="order-2 lg:order-1"
-                        >
-                            <img
-                                src={imgPillOrganizer}
-                                alt="Patient organizing daily medications in a pill organizer"
-                                className="w-full h-[420px] object-cover rounded-3xl shadow-lg"
-                            />
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="order-1 lg:order-2"
-                        >
-                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-500/10 text-violet-600 mb-5">
-                                <ScanLine className="w-5 h-5" />
+                        {/* Right Card (Inactive) */}
+                        <div className="relative hidden lg:block">
+                            <div className="w-[260px] h-[300px] rounded-[40px] border-[14px] border-blue-50 dark:border-blue-900/20 overflow-hidden shrink-0 mb-6">
+                                <img src={imgPillOrganizer} alt="Patient" className="w-full h-full object-cover" />
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-5 leading-tight">
-                                Scan prescriptions. Skip the typing.
-                            </h2>
-                            <p className="text-lg text-slate-500 leading-relaxed mb-4">
-                                Take a photo of any ordonnance and MedSafe's OCR engine will extract medication names automatically. No need to spell complicated drug names or search through lists.
-                            </p>
-                            <p className="text-base text-slate-500 leading-relaxed mb-6">
-                                Built with pharmacists in mind — the dedicated Pharmacist Portal lets you manage multiple patients, run batch interaction checks, and generate professional PDF reports. Whether you're behind the counter or doing a home visit, MedSafe fits your workflow.
-                            </p>
-                            <div className="flex items-center gap-6 text-sm text-slate-500">
-                                <span className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-violet-500" /> PDF reports</span>
-                                <span className="flex items-center gap-2"><Users className="w-4 h-4 text-violet-500" /> Multi-patient</span>
-                                <span className="flex items-center gap-2"><ScanLine className="w-4 h-4 text-violet-500" /> OCR scanner</span>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                            
+                            <button className="absolute bottom-10 -left-8 lg:-left-12 z-10 w-[52px] h-[52px] bg-black dark:bg-white rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-xl">
+                                <ArrowRight className="w-5 h-5 text-white dark:text-black" />
+                            </button>
+                        </div>
 
-
-            {/* ────────────── STATS ────────────── */}
-            <section className="py-16 bg-slate-900 dark:bg-zinc-900 border-t border-slate-800">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        {[
-                            { value: "236,834", label: "Verified interactions" },
-                            { value: "1,833", label: "Approved drugs" },
-                            { value: "Darija", label: "Native language support" },
-                            { value: "Free", label: "For every patient" },
-                        ].map((s) => (
-                            <div key={s.label}>
-                                <p className="text-3xl md:text-4xl font-extrabold text-white mb-1">{s.value}</p>
-                                <p className="text-sm text-slate-400 font-medium">{s.label}</p>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </section>
 
 
             {/* ────────────── CTA ────────────── */}
-            <section className="relative h-[700px] flex items-center overflow-hidden">
+            <section className="relative h-[600px] flex items-center justify-center overflow-hidden border-t border-slate-100 dark:border-zinc-800">
                 <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-0 bg-cover bg-center scale-105"
                     style={{
                         backgroundImage: `url(${imgGlovesHeart})`,
-                        backgroundPosition: 'center'
+                        backgroundPosition: 'center 40%'
                     }}
                 />
-                <div className="absolute inset-0 bg-black/50" />
+                {/* Refined gradient overlay for better text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-slate-900/40" />
 
                 <div className="relative z-10 w-full">
-                    <div className="max-w-4xl mx-auto text-center px-6">
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
-                            Ready to check your medications?
-                        </h2>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    <div className="max-w-3xl mx-auto text-center px-6">
+                        <motion.h2 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-4xl md:text-[52px] font-medium tracking-tight text-white leading-[1.15] mb-6"
+                        >
+                            {t('ready_to_verify')}
+                        </motion.h2>
+                        
+                        <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="text-[15px] md:text-[16px] text-slate-200 font-light leading-relaxed mb-10 max-w-xl mx-auto"
+                        >
+                            {t('join_thousands')}
+                        </motion.p>
+                        
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                            className="flex flex-col sm:flex-row justify-center gap-4"
+                        >
                             <Link to="/interactions">
-                                <Button size="lg" className="h-13 px-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base shadow-lg transition-all hover:scale-[1.02]">
-                                    Try MedSafe Now
-                                    <ChevronRight className="ml-1 w-4 h-4" />
-                                </Button>
+                                <button className="w-full sm:w-auto bg-white text-slate-900 rounded-[12px] px-8 py-3.5 text-[14.5px] font-medium hover:bg-slate-100 transition-all active:scale-[0.98] shadow-lg">
+                                    {t('try_medora')}
+                                </button>
                             </Link>
                             <Link to="/register">
-                                <Button size="lg" className="h-13 px-10 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-base backdrop-blur-md border border-white/30 transition-all hover:scale-[1.02]">
-                                    Create Account
-                                </Button>
+                                <button className="w-full sm:w-auto bg-white/5 border border-white/20 text-white rounded-[12px] px-8 py-3.5 text-[14.5px] font-medium backdrop-blur-md hover:bg-white/10 transition-all active:scale-[0.98]">
+                                    {t('create_account')}
+                                </button>
                             </Link>
-                        </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
 
+            {/* ────────────── CONTACT US ────────────── */}
+            <section className="py-16 md:py-20 bg-white dark:bg-zinc-950 flex justify-center">
+                <div className="w-full max-w-[700px] px-4 md:px-6">
+                    <div className="bg-[#fafafa] dark:bg-zinc-900/20 border border-slate-100 dark:border-zinc-800 rounded-[24px] p-8 md:p-10">
+                        
+                        <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-slate-900 dark:text-white mb-6">
+                            {t('reach_out')}
+                        </h2>
+
+                        <div className="flex flex-col gap-3">
+                            <input 
+                                type="text" 
+                                placeholder={t('full_name')}
+                                className="w-full bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-4 py-2.5 text-[13px] text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-slate-300 transition-all" 
+                            />
+                            <input 
+                                type="email" 
+                                placeholder={t('email_addr')}
+                                className="w-full bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-4 py-2.5 text-[13px] text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-slate-300 transition-all" 
+                            />
+                            <input 
+                                type="tel" 
+                                placeholder={t('phone_num')} 
+                                className="w-full md:w-[45%] bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-4 py-2.5 text-[13px] text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-slate-300 transition-all" 
+                            />
+                            <textarea 
+                                placeholder={t('how_can_help')} 
+                                rows={4}
+                                className="w-full bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-4 py-3 text-[13px] text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-slate-300 transition-all resize-none mt-1" 
+                            ></textarea>
+
+                            <div className="mt-2 text-[11px] text-[#8c8c8c] leading-relaxed font-light">
+                                <p className="mb-3">
+                                    By submitting this form, I agree to receiving customer care and marketing SMS messages from Medora. <br className="hidden md:block" /> Message and data rates may apply. Reply STOP to opt out, Reply HELP for help.
+                                </p>
+                                <p className="text-[#8c8c8c]">
+                                    {t('privacy_terms')}
+                                </p>
+                            </div>
+                            
+                            <div className="mt-1">
+                                <button type="button" className="bg-slate-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg px-6 py-2.5 text-[13px] font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-all active:scale-[0.98] w-full md:w-auto shadow-sm">
+                                    {t('submit_req')}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

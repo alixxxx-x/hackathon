@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   FileText,
   Database,
+  GraduationCap,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -34,7 +35,7 @@ import { Input } from "@/components/ui/input"
 const data = {
   teams: [
     {
-      name: "MedSafe",
+      name: "Medora",
       logo: ShieldCheck,
       plan: "Clinical Platform",
     },
@@ -75,6 +76,17 @@ const data = {
         {
           title: "Clinical Suite",
           url: "/dashboard/pharmacist",
+        },
+      ],
+    },
+    {
+      title: "PharmaTutor",
+      url: "/dashboard/tutor",
+      icon: GraduationCap,
+      items: [
+        {
+          title: "Training Chat",
+          url: "/dashboard/tutor",
         },
       ],
     },

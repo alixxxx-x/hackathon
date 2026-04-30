@@ -24,20 +24,33 @@ MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
 # 35 covers the full 7B model on a 6 GB+ GPU; lower this if you hit OOM errors.
 N_GPU_LAYERS = 35
 
-EXPLAIN_SYSTEM_PROMPT = (
-    "You are a clinical pharmacology assistant. "
+EXPLAIN_SYSTEM_PROMPT_PATIENT = (
+    "You are a clinical pharmacology assistant providing safety advice to patients. "
+    "Provide a clean, accessible experience designed for non-technical users and elderly populations. "
     "Your role is to provide a brief, single-paragraph safety advisory for a drug-drug interaction. "
     "Do NOT mention specific drug names in your response. "
-    "You must detail the specific side effects of the interaction, the pharmacological mechanism, "
+    "Detail the specific side effects of the interaction in simple terms, "
+    "and explicitly mention which patient populations are most at risk (e.g., children, pregnant women, elderly). "
+    "Keep responses concise (under 150 words). "
+    "DO NOT use markdown formatting, bullet points, or newlines."
+)
+
+EXPLAIN_SYSTEM_PROMPT_PHARMACIST = (
+    "You are a clinical pharmacology assistant providing professional advice to pharmacists. "
+    "Provide a denser, clinical-grade view that supports their dispensing decisions and reduces errors at the counter. "
+    "Your role is to provide a brief, single-paragraph safety advisory for a drug-drug interaction. "
+    "Do NOT mention specific drug names in your response. "
+    "You must detail the specific side effects, the precise pharmacological mechanism, "
     "and explicitly mention which patient populations are most at risk (e.g., children, pregnant women, "
     "elderly, renal or hepatic impairment). "
     "Keep responses concise (under 150 words). "
     "DO NOT use markdown formatting, bullet points, or newlines."
 )
 
-CONVERSATION_SYSTEM_PROMPT = (
+CONVERSATION_SYSTEM_PROMPT_PHARMACIST = (
     "You are PharmaTutor, an expert clinical pharmacology assistant designed to help "
     "pharmacists and pharmaceutical vendors strengthen their clinical knowledge. "
+    "Provide a denser, clinical-grade view that supports their dispensing decisions and reduces errors at the counter. "
     "You can explain drug mechanisms, pharmacokinetics, pharmacodynamics, therapeutic uses, "
     "contraindications, adverse effects, counselling points, and drug-drug interactions "
     "at a professional level suitable for licensed pharmacists. "
@@ -48,6 +61,15 @@ CONVERSATION_SYSTEM_PROMPT = (
     "educational and do not replace clinical judgement or prescriber authority. "
     "You must ALWAYS reply EXCLUSIVELY in French. DO NOT include English translations. "
     "Keep answers very short, concise, and precise. Limit your responses to 3 lines maximum."
+)
+
+CONVERSATION_SYSTEM_PROMPT_PATIENT = (
+    "You are Medora, a helpful medical assistant for patients. "
+    "Provide a clean, accessible experience designed for non-technical users and elderly populations. "
+    "Explain medical concepts in simple, reassuring terms. "
+    "Always advise the user to consult their doctor or pharmacist for medical decisions. "
+    "You must ALWAYS reply EXCLUSIVELY in French. DO NOT include English translations. "
+    "Keep answers very short, concise, and easy to understand. Limit your responses to 3 lines maximum."
 )
 
 LEVEL_CONTEXT = {
@@ -109,9 +131,12 @@ def load() -> None:
     _load_model()
 
 
-def _build_explain_prompt(drug_a: str, drug_b: str, level: str, original_level: str) -> str:
+def _build_explain_prompt(drug_a: str, drug_b: str, level: str, original_level: str, role: str = "pharmacist") -> str:
     """Build a [INST]-style prompt for a single-shot interaction explanation."""
     from app.services.ddinter_service import ddinter_service
+
+    system_prompt = EXPLAIN_SYSTEM_PROMPT_PHARMACIST if role == "pharmacist" else EXPLAIN_SYSTEM_PROMPT_PATIENT
+    logger.info("Building explain prompt for role: %s. System prompt starts with: %s", role, system_prompt[:50])
 
     meta_a = ddinter_service.get_drug_metadata(drug_a)
     meta_b = ddinter_service.get_drug_metadata(drug_b)
@@ -134,17 +159,20 @@ def _build_explain_prompt(drug_a: str, drug_b: str, level: str, original_level: 
         f"Provide a concise generic advisory (using 'Drug A' and 'Drug B' instead of their real names) for this specific interaction. "
         f"Remember to include specific side effects, mechanisms, and target vulnerable populations in a single paragraph without markdown."
     )
-    return f"[INST] <<SYS>>\n{EXPLAIN_SYSTEM_PROMPT}\n<</SYS>>\n\n{user_msg} [/INST]"
+    return f"[INST] <<SYS>>\n{system_prompt}\n<</SYS>>\n\n{user_msg} [/INST]"
 
 
 def _build_conversation_prompt(
     history: List[dict],
-    system_prompt: str = CONVERSATION_SYSTEM_PROMPT,
+    system_prompt: Optional[str] = None,
+    role: str = "pharmacist",
 ) -> str:
     """
     Build a multi-turn [INST] prompt from a conversation history.
     history is a list of {"role": "user"|"assistant", "content": "..."} dicts.
     """
+    if system_prompt is None:
+        system_prompt = CONVERSATION_SYSTEM_PROMPT_PHARMACIST if role == "pharmacist" else CONVERSATION_SYSTEM_PROMPT_PATIENT
     prompt = "<s>"
     first_user = True
 
@@ -169,6 +197,7 @@ def generate_explanation(
     drug_b: str,
     level: str,
     original_level: str,
+    role: str = "pharmacist",
     max_tokens: int = 250,
     temperature: float = 0.3,
 ) -> str:
@@ -187,7 +216,7 @@ def generate_explanation(
         Plain-text medical advisory string.
     """
     model = _load_model()
-    prompt = _build_explain_prompt(drug_a, drug_b, level, original_level)
+    prompt = _build_explain_prompt(drug_a, drug_b, level, original_level, role=role)
 
     logger.debug("Generating explanation for %s + %s [%s]", drug_a, drug_b, level)
     output = model(
@@ -203,6 +232,7 @@ def generate_explanation(
 
 def generate_conversation_reply(
     history: List[dict],
+    role: str = "pharmacist",
     max_tokens: int = 512,
     temperature: float = 0.4,
 ) -> str:
@@ -225,7 +255,7 @@ def generate_conversation_reply(
         raise ValueError("The last message in history must be a user message.")
 
     model = _load_model()
-    prompt = _build_conversation_prompt(history)
+    prompt = _build_conversation_prompt(history, role=role)
 
     logger.debug("Generating conversation reply (turns=%d)", len(history))
     output = model(

@@ -75,10 +75,22 @@ class DrugListView(generics.ListAPIView):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def analyze_interactions(request):
-    drugs = request.data.get('drugs', [])
-    if not drugs:
+    drugs_raw = request.data.get('drugs', [])
+    user_role = request.data.get('user_role', 'pharmacist')
+    if not drugs_raw:
         return Response({"error": "No drugs provided"}, status=status.HTTP_400_BAD_REQUEST)
     
+    # Resolve brand names to generic names using our local DB for better matching
+    drugs_resolved = []
+    for d_name in drugs_raw:
+        # Try exact brand name match
+        drug_obj = Drug.objects.filter(Q(brand_name__iexact=d_name) | Q(generic_name__iexact=d_name)).first()
+        if drug_obj:
+            # Use generic name for clinical accuracy, or brand if generic is missing
+            drugs_resolved.append(drug_obj.generic_name or drug_obj.brand_name)
+        else:
+            drugs_resolved.append(d_name)
+
     base_url = getattr(settings, 'FASTAPI_BASE', 'http://127.0.0.1:8001')
     if not base_url.startswith('http'):
         base_url = f"http://{base_url}"
@@ -86,7 +98,11 @@ def analyze_interactions(request):
     fastapi_url = f"{base_url}/api/v1/interactions/analyze"
     
     try:
-        response = requests.post(fastapi_url, json={"drugs": drugs}, timeout=60)
+        response = requests.post(
+            fastapi_url, 
+            json={"drugs": drugs_resolved, "user_role": user_role}, 
+            timeout=60
+        )
         return Response(response.json(), status=response.status_code)
     except requests.exceptions.Timeout:
         return Response({"error": "MedSafe engine timed out. It might still be loading the AI model."}, status=status.HTTP_504_GATEWAY_TIMEOUT)
@@ -120,6 +136,7 @@ class MedicationProfileDelete(generics.DestroyAPIView):
 def check_against_profile(request):
     """Check a new drug against ALL medications in the user's saved profile."""
     new_drug = request.data.get('drug_name', '')
+    user_role = request.data.get('user_role', 'patient')  # Default to patient for profile checks
     if not new_drug:
         return Response({"error": "No drug_name provided"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -141,7 +158,11 @@ def check_against_profile(request):
     fastapi_url = f"{base_url}/api/v1/interactions/analyze"
 
     try:
-        response = requests.post(fastapi_url, json={"drugs": all_drugs}, timeout=60)
+        response = requests.post(
+            fastapi_url, 
+            json={"drugs": all_drugs, "user_role": user_role}, 
+            timeout=60
+        )
         return Response(response.json(), status=response.status_code)
     except requests.exceptions.Timeout:
         return Response({"error": "MedSafe engine timed out."}, status=status.HTTP_504_GATEWAY_TIMEOUT)
